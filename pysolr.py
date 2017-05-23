@@ -1017,10 +1017,12 @@ class Solr(object):
         params.update(kwargs)
 
         try:
+            #Hack to make it use params instead of body
+            params_encoded = safe_urlencode(params, True)
+            path = '%s/?%s' % (handler,params_encoded)
             # We'll provide the file using its true name as Tika may use that
             # as a file type hint:
-            resp = self._send_request('post', handler,
-                                      body=params,
+            resp = self._send_request('post', path,
                                       files={'file': (file_obj.name, file_obj)})
         except (IOError, SolrError) as err:
             self.log.error("Failed to extract document metadata: %s", err,
@@ -1072,7 +1074,7 @@ class SolrCoreAdmin(object):
         self.url = url
 
     def _get_url(self, url, params={}, headers={}):
-        resp = requests.get(url, data=safe_urlencode(params), headers=headers)
+        resp = requests.get(url, params=safe_urlencode(params), headers=headers)
         return force_unicode(resp.content)
 
     def status(self, core=None):

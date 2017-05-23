@@ -7,7 +7,7 @@ if [ ! -t 0 ]; then
     exec 1>test-solr.stdout.log 2>test-solr.stderr.log
 fi
 
-SOLR_VERSION=4.10.4
+SOLR_VERSION=6.5.1
 
 ROOT=$(cd `dirname $0`; pwd)
 APP=$ROOT/solr-app
